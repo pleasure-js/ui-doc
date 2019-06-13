@@ -14,7 +14,15 @@ import vuedoc from '@vuedoc/md';
  * @desc Metadata of a category
  * @property {String|null} icon - Icon of the component. See [Font Awesome](https://fontawesome.com/icons?d=gallery&m=free).
  * @property {String} name - Full name of the category. Defaults to the result of analyzing the anatomy of the directory
- * structure. i.e. /components/:category/component.vue
+ * structure. i.e. `/components/:category/component.vue`
+ *
+ * @example From `/:category/meta.json`
+ * ```json
+ * {
+ *   "name": "The category name",
+ *   "icon": "apple"
+ * }
+ * ```
  */
 
 /**
