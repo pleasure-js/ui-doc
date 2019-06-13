@@ -39,8 +39,16 @@ Metadata of a category
 | Name | Type | Description |
 | --- | --- | --- |
 | icon | <code>String</code> \| <code>null</code> | Icon of the component. See [Font Awesome](https://fontawesome.com/icons?d=gallery&m=free). |
-| name | <code>String</code> | Full name of the category. Defaults to the result of analyzing the anatomy of the directory structure. i.e. /components/:category/component.vue |
+| name | <code>String</code> | Full name of the category. Defaults to the result of analyzing the anatomy of the directory structure. i.e. `/components/:category/component.vue` |
 
+**Example**  
+From `/:category/meta.json`
+```json
+{
+  "name": "The category name",
+  "icon": "apple"
+}
+```
 <a name="VueComponent"></a>
 
 ## VueComponent : <code>Object</code>
