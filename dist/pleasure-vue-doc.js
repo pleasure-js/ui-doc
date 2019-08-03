@@ -12,6 +12,7 @@ var path = _interopDefault(require('path'));
 var fsExtra = require('fs-extra');
 var Promise = _interopDefault(require('bluebird'));
 var vuedoc = _interopDefault(require('@vuedoc/md'));
+var fs = _interopDefault(require('fs'));
 
 /**
  * @typedef {Object} CategoryMeta
@@ -38,11 +39,16 @@ var vuedoc = _interopDefault(require('@vuedoc/md'));
  */
 
 /**
+ * @typedef {VueComponent[]} VueComponents
+ * @desc An array of {@link VueComponent}'s
+ */
+
+/**
  * Deeply scans given directory looking for `.vue` files.
  * @param {String} directory - Directory to components
- * @return {Promise<VueComponent[]>} Array of {@link VueComponent}'s
+ * @return {Promise<VueComponents>}
  */
-async function parseVueDocs (directory) {
+async function parseUi (directory) {
   return Promise.map(await pleasureUtils.deepScanDir(directory, { only: [/\.vue$/] }), async (filePath) => {
     let name = path.basename(filePath).replace(/\.vue$/, '');
     let icon = null;
@@ -67,8 +73,71 @@ async function parseVueDocs (directory) {
   })
 }
 
+const resolve = (...paths) => {
+  return path.join(__dirname, '../', ...paths)
+};
+
+const removeIfExists = file => {
+  if (fs.existsSync(file)) {
+    return fs.unlinkSync(file)
+  }
+};
+
+/**
+ * @typedef {Object} RollupPlugin
+ * @see {@link https://rollupjs.org/guide/en#plugins-overview}
+ */
+
+/**
+ * @param {String} componentsSrc - Where to read the components from
+ * @param {String} destination - Where to copy all of the asset files. Defaults to the rollup dist folder.
+ * @param {String} jsDist - Location of the js distribution. Defaults to rollup dist script.
+ * @param {String} cssFile=style.css - Destination to the css file.
+ * @return {RollupPlugin} The rollup plugin
+ */
+function RollupPlugin ({ componentsSrc, destination, jsDist, cssFile = 'style.css' }) {
+  return {
+    name: 'pleasure-vue-doc',
+    transform () {
+      // console.log(`transform hook`, path.join(__dirname, '../assets/index.html'))
+      this.addWatchFile(path.join(__dirname, '../assets/index.html'));
+      this.addWatchFile(path.join(__dirname, '../assets/style.css'));
+    },
+    async generateBundle (opts) {
+      // console.log(`generate bundle`, { opts }, !destination, path.dirname(opts.file))
+      if (!destination) {
+        console.log({ opts });
+        destination = path.dirname(opts.file);
+      }
+
+      // console.log({ opts })
+      const dist = (...paths) => {
+        return path.join(destination, ...paths)
+      };
+      console.log({ componentsSrc });
+      const ComponentDocs = await parseUi(componentsSrc);
+      const srcDocIndex = resolve('assets/index.html');
+      const srcStyle = resolve('assets/style.css');
+      const dstStyle = dist('style.css');
+      const docIndex = dist('index.html');
+
+      removeIfExists(dstStyle);
+      removeIfExists(docIndex);
+
+      // todo: set dynamic
+      let newIndex = fs.readFileSync(srcDocIndex).toString();
+      newIndex = newIndex.replace(`JS_DIST`, jsDist || path.basename(opts.file));
+      newIndex = newIndex.replace(`CSS_DIST`, cssFile);
+      newIndex = newIndex.replace(`VUE_COMPONENTS`, JSON.stringify(ComponentDocs, null, 2));
+      this.emitAsset('index.html', newIndex);
+      this.emitAsset('style.css', fs.readFileSync(srcStyle));
+    }
+  }
+}
+
 var index = {
-  parseVueDocs
+  parseUi,
+  RollupPlugin
 };
 
 module.exports = index;

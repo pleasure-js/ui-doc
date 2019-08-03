@@ -1,5 +1,7 @@
-import { parseVueDocs } from './lib/parse-vue-docs.js'
+import { parseUi } from './lib/parse-ui.js'
+import { RollupPlugin } from './lib/rollup-plugin.js'
 
 export default {
-  parseVueDocs
+  parseUi,
+  RollupPlugin
 }

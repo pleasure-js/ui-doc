@@ -29,11 +29,16 @@ import vuedoc from '@vuedoc/md'
  */
 
 /**
+ * @typedef {VueComponent[]} VueComponents
+ * @desc An array of {@link VueComponent}'s
+ */
+
+/**
  * Deeply scans given directory looking for `.vue` files.
  * @param {String} directory - Directory to components
- * @return {Promise<VueComponent[]>} Array of {@link VueComponent}'s
+ * @return {Promise<VueComponents>}
  */
-export async function parseVueDocs (directory) {
+export async function parseUi (directory) {
   return Promise.map(await deepScanDir(directory, { only: [/\.vue$/] }), async (filePath) => {
     let name = path.basename(filePath).replace(/\.vue$/, '')
     let icon = null
