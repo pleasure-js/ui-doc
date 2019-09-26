@@ -25,6 +25,6 @@
     "ava": "^2.1.0",
     "bluebird": "^3.5.5",
     "fs-extra": "^8.0.1",
-    "pleasure-utils": "keepwondering/pleasure-utils"
+    "pleasure-utils": "keepwondering/pleasure-utils#v1-beta"
   }
 }
