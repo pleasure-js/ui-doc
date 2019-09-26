@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vue Boilerplate</title>
+  <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="JS_DIST"></script>
+  <link rel="stylesheet" href="CSS_DIST">
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.6.2/marked.min.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <el-container>
+    <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
+      <el-menu>
+        <!-- render the menu -->
+        <!--
+                <el-submenu index="1">
+                  <template slot="title"><i class="el-icon-message"></i>Grupo de Componentes 1!</template>
+                  <el-menu-item-group title="Sub-grupo de componentes 1">
+                    <el-menu-item index="1-1">Componente 1</el-menu-item>
+                    <el-menu-item index="1-2">Componente 2</el-menu-item>
+                  </el-menu-item-group>
+                </el-submenu>
+        -->
+        <el-menu-item
+          v-for="vueComponent in vueComponents"
+          @click="selectComponent(vueComponent)"
+        >
+          {{ vueComponent.name }}
+        </el-menu-item>
+      </el-menu>
+    </el-aside>
+
+    <el-container class="doc-dist-content">
+      <el-tabs class="component-details">
+        <el-tab-pane label="Docs" name="docs" v-html="docs">
+          <!--
+          render the component md docs
+          -->
+        </el-tab-pane>
+        <el-tab-pane label="Component" name="component">
+          <!--
+          render the selected component from the menu here
+          -->
+          <component
+            v-if="selectedComponent"
+            :is="selectedComponent.name"
+          ></component>
+        </el-tab-pane>
+<!--
+        <el-tab-pane label="Examples" name="examples">
+          &lt;!&ndash;
+          render the component md docs
+          &ndash;&gt;
+        </el-tab-pane>
+-->
+      </el-tabs>
+    </el-container>
+  </el-container>
+
+</div>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  .component-details {
+    width: 100%;
+  }
+
+  .el-header {
+    background-color: #B3C0D1;
+    color: #333;
+    line-height: 60px;
+  }
+
+  .el-aside {
+    color: #333;
+  }
+</style>
+
+<script>
+  new Vue({
+    el: '#app',
+    components: HelloWorld,
+    computed: {
+      docs() {
+        if (!this.selectedComponent) {
+          return
+        }
+        return marked(this.selectedComponent.docs)
+      }
+    },
+    data () {
+      return {
+        selectedComponent: null,
+        vueComponents: VUE_COMPONENTS
+      }
+    },
+    methods: {
+      selectComponent (component) {
+        console.log({ component })
+        this.selectedComponent = component
+      }
+    }
+  })
+</script>
+</body>
+</html>
