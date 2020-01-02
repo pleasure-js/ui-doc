@@ -3,12 +3,14 @@ import commonjs from 'rollup-plugin-commonjs'
 import json from 'rollup-plugin-json'
 import alias from 'rollup-plugin-alias'
 import { name, version, author, license } from './package.json'
+import NodeResolve from 'rollup-plugin-node-resolve'
 
 const fromSrc = (...paths) => {
   return path.join(__dirname, 'src', ...paths)
 }
 
 const plugins = [
+  /*NodeResolve({only: ['lodash', '@pleasure-js/api-client', 'vue',' vuex']}),*/
   alias({
     src: fromSrc(),
     lib: fromSrc('lib')

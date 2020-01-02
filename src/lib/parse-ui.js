@@ -1,8 +1,9 @@
-import { deepScanDir } from 'pleasure-utils'
+import { deepScanDir } from '@pleasure-js/utils'
 import path from 'path'
 import { pathExists, readJson } from 'fs-extra'
 import Promise from 'bluebird'
 import vuedoc from '@vuedoc/md'
+import vuedocParser from '@vuedoc/parser'
 
 /**
  * @typedef {Object} CategoryMeta
@@ -26,6 +27,7 @@ import vuedoc from '@vuedoc/md'
  * @property {String} name - The tag name of the component (i.e. `<component-name/>`)
  * @property {CategoryMeta[]} category - Category of the component
  * @property {String} docs - Markdown docs of the component
+ * @property {Object} component - Returned component by vuedocParser.
  */
 
 /**
@@ -52,13 +54,24 @@ export async function parseUi (directory) {
       return !/\.vue/.test(file)
     })
 
-    const docs = await vuedoc.md({ filename: filePath })
+    let docs
+    let component
+
+    // console.log(`parsing ${ filePath }`)
+    try {
+      docs = await vuedoc.md({ filename: filePath })
+      component = await vuedocParser.parse({ filename: filePath })
+      // console.log(`component parsed`, { component })
+    } catch (err) {
+      // console.log(`Error rendering ${ filePath }`, err)
+    }
 
     return {
       filePath,
       name,
       category,
-      docs
+      docs,
+      component,
     }
   })
 }

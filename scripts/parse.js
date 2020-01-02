@@ -1,4 +1,4 @@
-const { parseVueDocs } = require('../')
+const { parseUi } = require('../')
 const path = require('path')
 
-parseVueDocs(path.join(__dirname, `../../pleasure-ui-vue`))
+parseUi(path.join(__dirname, `../../pleasure-ui-vue`))
