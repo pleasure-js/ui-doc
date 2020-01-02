@@ -27,7 +27,7 @@
     "ava": "^2.1.0",
     "bluebird": "^3.5.5",
     "fs-extra": "^8.0.1",
-    "@pleasure-js/utils": "git@github.com:pleasure-js/utils.git#v1-beta",
+    "@pleasure-js/utils": "git+ssh://git@github.com:pleasure-js/utils.git#v1-beta",
     "rollup-plugin-node-resolve": "^5.2.0"
   }
 }
